@@ -2,23 +2,42 @@
 # (backend) create functions to train your model with the csv data uploaded 
 # (backend/frontend) evalute the model and present findings 
 
-progress_bar = st.sidebar.progress(0)
-status_text = st.sidebar.empty()
-last_rows = np.random.randn(1, 1)
-chart = st.line_chart(last_rows)
+import streamlit as st 
+import numpy as np 
+import plotly_express as px
+import pandas as pd 
 
-for i in range(1, 101):
-    new_rows = last_rows[-1, :] + np.random.randn(5, 1).cumsum(axis=0)
-    status_text.text("%i%% Complete" % i)
-    chart.add_rows(new_rows)
-    progress_bar.progress(i)
-    last_rows = new_rows
-    time.sleep(0.05)
+import matplotlib.pyplot as plt
+from sklearn import datasets
+from sklearn.model_selection import train_test_split
 
-progress_bar.empty()
+from sklearn.decomposition import PCA
+from sklearn.svm import SVC
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.ensemble import RandomForestClassifier
 
-# Streamlit widgets automatically run the script from top to bottom. Since
-# this button is not connected to any other logic, it just causes a plain
-# rerun.
-st.button("Re-run")
+from sklearn.metrics import accuracy_score
+
+st.title('Bring Your Own Data Case Study')
+
+st.sidebar.subheader("Visualization Settings")
+
+uploaded_file= st.sidebar.file_uploader(label = "Hello! Please upload a CSV file. (200MB max)", type = ['csv'])
+
+global df 
+
+if uploaded_file is not None: 
+    print(uploaded_file)
+    try:
+        df = pd.read_csv(uploaded_file)
+    except Exception as e: 
+        print(e)
+        df = pd.read_csv(uploaded_file)
+st.write(df)
+
+try:
+    st.write(df)
+except Exception as e: 
+    print(e)
+    str.write("Please upload correctly formatted file to the application.")
 
